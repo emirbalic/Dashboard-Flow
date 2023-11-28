@@ -13,20 +13,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { loadOrders } from '@/api/overview';
+// import { loadOrders } from '@/api/overview';
 
 export default defineComponent({
 
-  setup() {
+  // setup() {
 
-    const addOrder = () => {
-      loadOrders();
-    }
+  //   // const addOrder = () => {
+  //   //   loadOrders();
+  //   // }
 
-    return {
-      addOrder
-    };
-  }
+  //   // return {
+  //   //   addOrder
+  //   // };
+  // }
 })
 
 </script>

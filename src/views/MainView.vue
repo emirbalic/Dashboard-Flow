@@ -24,28 +24,29 @@
                     <div class="section-title">DASHBOARDS</div>
 
                     <section class="is-data" :class="{
-                        'is-toggled': toggledProducts.includes('incoming-calls-overview'),
-                        'is-active': routeProduct === 'incoming-calls-overview',
+                        'is-toggled': toggledProducts.includes('reporting'),
+                        'is-active': routeProduct === 'reporting',
                     }">
                     <!-- top -->
-                        <a href="#" @click.prevent="toggleProduct('incoming-calls-overview')">
-                            <Calls_Icon :color="colorKey === 'incoming-calls-overview' ? activeColor : baseColor" class="nav_icon" />
+                        <a href="#" @click.prevent="toggleProduct('reporting')">
+                            <Calls_Icon :color="colorKey === 'reporting' ? activeColor : baseColor" class="nav_icon" />
                             <span>Reporting</span>
                             <MenuToggle_Icon class="menuToggle" />
                         </a>
                         <div class="subs">
-                         <!--    <router-link :to="{ name: 'incoming-calls-overview' }"
-                                :class="{ 'router-link-exact-active': checkURL('incoming-calls-overview') }" class="each">
-                                Overview
+                          <router-link :to="{ name: 'orders' }"
+                                :class="{ 'router-link-exact-active': checkURL('orders') }" class="each">
+                                Orders 
                             </router-link>
-                            <router-link :to="{ name: 'incoming-calls-monitoring' }"
-                                :class="{ 'router-link-exact-active': checkURL('incoming-calls-monitoring') }" class="each">
-                                Monitoring
+                              <router-link :to="{ name: 'products' }"
+                                :class="{ 'router-link-exact-active': checkURL('products') }" class="each">
+                                Products
                             </router-link>
-                            <router-link :to="{ name: 'incoming-calls-insights' }"
-                                :class="{ 'router-link-exact-active': checkURL('incoming-calls-insights') }" class="each">
-                                Insights
-                            </router-link> -->
+                            <router-link :to="{ name: 'suppliers' }"
+                                :class="{ 'router-link-exact-active': checkURL('suppliers') }" class="each">
+                                Suppliers
+                            </router-link> 
+
                         </div>
                     </section>
 
@@ -60,6 +61,10 @@
                             <MenuToggle_Icon class="menuToggle" />
                         </a>
                         <div class="subs">
+                            <router-link :to="{ name: 'customers' }"
+                                :class="{ 'router-link-exact-active': checkURL('customers') }" class="each">
+                                Customers
+                            </router-link>
                             <!-- <router-link :to="{
                                 name: 'callers-report',
                                 params: {
@@ -133,14 +138,14 @@ import api from '../api/api';
 // import Config_Icon from '@/components/icons/Config_Icon.vue';
 // import Settings_Icon from '@/components/icons/Settings_Icon.vue';
 // import User_Icon from '@/components/icons/User_Icon.vue';
-// import Home_Icon from '../assets/icons/Home_Icon.vue';
-import Home_Icon from '@/components/icons/Home_Icon.vue';
+import Home_Icon from '@/assets/icons/Home_Icon.vue';
+// import Home_Icon from '@/components/icons/Home_Icon.vue';
 
-import MenuToggle_Icon from '@/components/icons/MenuToggle_Icon.vue';
+import MenuToggle_Icon from '@/assets/icons/MenuToggle_Icon.vue';
 // import Users_Icon from '@/components/icons/Users_Icon.vue';
-import Callers_Icon from '@/components/icons/Callers_Icon.vue';
+import Callers_Icon from '@/assets/icons/Callers_Icon.vue';
 // import Target_Icon from '@/components/icons/Target_Icon.vue';
-import Calls_Icon from '@/components/icons/Calls_Icon.vue';
+import Calls_Icon from '@/assets/icons/Calls_Icon.vue';
 
 
 
@@ -200,9 +205,9 @@ export default defineComponent({
             colorKey.value = key;
         };
 
-        // const checkURL = (path: string) => {
-        //     return route.path.includes(path)
-        // };
+        const checkURL = (path: string) => {
+            return route.path.includes(path)
+        };
 
 
         return {
@@ -219,7 +224,7 @@ export default defineComponent({
             route,
             toggledProducts,
 
-            // checkURL,
+            checkURL,
             defaultLink,
             //   logout,
             toggleProduct,  // --> NAMING SUGGESTION SWITCH VIEW <--
@@ -228,19 +233,7 @@ export default defineComponent({
     },
 });
 </script>
-<!-- <style scoped lang="scss">
 
+<style scoped lang="scss">
 
-
-
-.scrollable::-webkit-scrollbar {
-  display: none;
-}
-
-
-.each {
-  margin-left: 2.5rem;
-}
-
-
-</style> -->
+</style>
