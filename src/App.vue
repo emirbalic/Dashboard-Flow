@@ -1,10 +1,35 @@
 <template>
-  <nav>
+    <!-- <container class="app" >  </container> -->
+
+
+  <!-- <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+    <button @click="addOrder">Get orders in app</button>
+
+  </nav> -->
+  <router-view />
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { loadOrders } from '@/api/overview';
+
+export default defineComponent({
+
+  setup() {
+
+    const addOrder = () => {
+      loadOrders();
+    }
+
+    return {
+      addOrder
+    };
+  }
+})
+
+</script>
 
 <style lang="scss">
 #app {
