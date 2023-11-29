@@ -4,10 +4,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // needed for skeleton
 import MainView from '@/views/MainView.vue'
 import Default from '@/components/default/Default.vue'
-import OrdersView from '@/views/reporting/OrdersView.vue'
-import SuppliersView from '@/views/reporting/SuppliersView.vue'
-import ProductsView from '@/views/reporting/ProductsView.vue'
-import CustomersView from '@/views/customers/CustomersView.vue';
+import OrdersView from '@/views/reporting/screens/OrdersView.vue'
+import SuppliersView from '@/views/reporting/screens/SuppliersView.vue'
+import ProductsView from '@/views/reporting/screens/ProductsView.vue'
+import CustomersView from '@/views/customers/screens/CustomersView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   

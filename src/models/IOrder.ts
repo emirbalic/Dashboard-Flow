@@ -6,12 +6,12 @@ export interface IOrder {
   customer: ICustomer;
   product: IProduct;
   requiredDate: string;
-  shippedDate: string;
-  shippedVia: string;
   shippedName: string;
   shippedAddress: string;
   shippedCity: string;
-  shippedRegion: string;
   shippedPostalCode: string;
   shippedCountry: string;
+  // add this two when work on post
+  customerId: string;
+  productId: string;
 }

@@ -3,17 +3,17 @@ import api from '@/api/api';
 import {  AxiosResponse, AxiosError } from 'axios';
 
 const URLS = {
-    order: 'orders/',
+    categories: 'categories/',
    
   };
 
-export const loadOrders = () => {
+export const loadCategories = () => {
 
     // console.log('loading ... ');
     
     return new Promise((resolve, reject) => {
       api
-        .get(URLS.order)//, {}
+        .get(URLS.categories)//, {}
         .then((response: AxiosResponse) => {
             // console.log(response.data);
             

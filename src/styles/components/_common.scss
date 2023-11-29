@@ -108,31 +108,3 @@ table {
 }
 
 
-.modal {
-  @include full-abs;
-  pointer-events: all;
-
-  > .modal-body {
-    position: relative;
-    z-index: 2;
-    overflow-y: auto;
-
-    > .modal-close {
-      text-decoration: none;
-      position: absolute;
-      top: 18px;
-      right: 16px;
-      font-size: 48px;
-      line-height: 24px;
-      font-family: monospace;
-      color: inherit;
-    }
-  }
-
-  > .modal-background {
-    @include full-abs;
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100vh;
-  }
-}
-

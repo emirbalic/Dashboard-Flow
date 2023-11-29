@@ -4,7 +4,7 @@
     <span class="title">
       Reporting / Orders
     </span>
-    <button class="button is-primary" style="margin-right: 2.8rem;" @click="openModal">
+    <button class="button is-primary" style="margin-right: 2.8rem;" @click="openCreateModal">
       <Plus_Icon class="nav_icon" />
       New order
     </button>
@@ -12,6 +12,9 @@
 
 
   <div class="body" @click="closeDropdown">
+
+    <create-order v-if="isCreateModalVisible" @close-modal="closeModal" @update-list="updateList">
+            </create-order>
 
     <!-- <confirm-delete-modal v-if="isDeleteModalVisible" :entity-type="ENTITY_TYPE" :entity-title="entityTitle"
             @close-modal="closeModal" @handle-delete="handleDeleteRecord">
@@ -41,15 +44,15 @@
           <th>Customer Name</th>
           <th>Product Name</th>
           <th>Required Date</th>
-          <th>Shipped Date</th>
-          <th>Shipped Via</th>
+          <!-- <th>Shipped Date</th> -->
+          <!-- <th>Shipped Via</th> -->
           <th>Shipped Name</th>
           <th>Shipped Address</th>
-         
+
           <th>Shipped City</th>
-          <th>Shipped Region</th>
+          <!-- <th>Shipped Region</th> -->
           <th>Shipped Postal Code</th>
-          <th>Shipped Country</th> 
+          <th>Shipped Country</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -57,30 +60,22 @@
         <tr v-for="(item, i) in orders" :key="i">
           <td>{{ item.id }}</td>
           <td>{{ formatDate(item.order_date) }}</td>
-          <!-- <td class="align_column">
-            <strong>
-              {{ item.priority }}
-            </strong>
-          </td> -->
           <td>{{ item.customer.last_name }}</td>
           <td>{{ item.product.product_name }}</td>
           <td>{{ formatDate(item.required_date) }}</td>
-          <td>{{ formatDate(item.shipped_date) }}</td>
-          <td>{{ item.shipped_via }}</td>
           <td>{{ item.shipped_name }}</td>
           <td>{{ item.shipped_address }}</td>
           <td>{{ item.shipped_city }}</td>
-          <td>{{ item.shipped_region }}</td>
           <td>{{ item.shipped_postal_code }}</td>
           <td>{{ item.shipped_country }}</td>
           <td>
-              <span>
-                <Edit_Icon class="table_icon" @click="goToEdit(item.type_short, item.id, item.type)" />
-              </span>
-              <span style="margin-left: .8rem;" @click="() => openDeleteModal(item.id, item.id)">
-                <Trash_Icon class="table_icon" />
-              </span>
-            </td>
+            <span>
+              <Edit_Icon class="table_icon" @click="goToEdit(item.type_short, item.id, item.type)" />
+            </span>
+            <span style="margin-left: .8rem;" @click="() => openDeleteModal(item.id, item.id)">
+              <Trash_Icon class="table_icon" />
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -88,11 +83,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { onBeforeMount, computed, defineComponent, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import dayjs from 'dayjs';
 
-import { loadOrders } from '@/api/overview';
+import { loadOrders } from '@/api/reporting';
 
 
 import Edit_Icon from '@/assets/icons/Edit_Icon.vue';
@@ -101,9 +96,12 @@ import Sorting_Icon from '@/assets/icons/Sorting_Icon.vue';
 import Trash_Icon from '@/assets/icons/Trash_Icon.vue';
 import { IOrder } from '@/models/IOrder';
 
+import CreateOrder from '../modals/CreateOrder.vue';
+
 
 export default defineComponent({
   components: {
+    CreateOrder,
     Edit_Icon,
     Plus_Icon,
     Sorting_Icon,
@@ -112,6 +110,13 @@ export default defineComponent({
   setup() {
 
     const store = useStore();
+
+    const isCreateModalVisible = ref(false);
+
+    const closeModal = () => {
+            isCreateModalVisible.value = false;
+            
+        };
 
     const orders = ref();
 
@@ -168,16 +173,17 @@ export default defineComponent({
     //   return formattedData;
     // });
 
-    const addOrder = async () => {
+    const updateList = async () => {
 
 
       orders.value = await loadOrders();
-      console.log(orders.value);
+      // console.log(orders.value);
 
 
     }
-    const openModal = () => {
-      console.log('opened');
+    const openCreateModal = () => {
+      // console.log('opened');
+      isCreateModalVisible.value = true;
 
     };
 
@@ -185,21 +191,24 @@ export default defineComponent({
       console.log('closed dropdown');
     };
 
-    addOrder()
+    onBeforeMount(() => {
+      // console.log(`the component is still not mounted.`)
+      updateList()
+    })
+
     return {
+      isCreateModalVisible,
       orders,
       closeDropdown,
+      closeModal,
       formatDate,
       goToEdit,
       openDeleteModal,
-      openModal
+      openCreateModal,
+      updateList
     }
   }
 })
 </script>
 
-<style lang="scss" scoped>
-
-
-
-</style>
+<style lang="scss" scoped></style>

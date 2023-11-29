@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { loadOrders } from '@/api/overview';
+import { loadOrders } from '@/api/reporting';
 // import dayjs from 'dayjs';
 
 export default defineComponent({
