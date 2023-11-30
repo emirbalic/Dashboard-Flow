@@ -1,5 +1,5 @@
 <template>
-    <Modal @close="closeModal">
+    <modal @close="closeModal">
         <div class="modal-content">
             <div class="header">
                 <div class="content">
@@ -7,7 +7,7 @@
                     <Close_Icon class="icon" @click="closeModal()"></Close_Icon>
                 </div>
             </div>
-            <error-message-header v-if="hasError" :message="errorMessage"></error-message-header>
+            <!-- <error-message-header v-if="hasError" :message="errorMessage"></error-message-header> -->
             <label>
                 <strong>
                     <small>
@@ -52,11 +52,6 @@
                     </small>
                 </strong>
             </label>
-            
-
-
-
-
 
             <input type="date" v-model="requiredDate" />
             <label>
@@ -83,7 +78,6 @@
                 <strong>
                     <small>
                         Shipped City
-
                         <span class="validation-mark">*</span>
                     </small>
                 </strong>
@@ -93,7 +87,6 @@
                 <strong>
                     <small>
                         Shipped Postal Code
-
                         <span class="validation-mark">*</span>
                     </small>
                 </strong>
@@ -103,7 +96,6 @@
                 <strong>
                     <small>
                         Shipped Country
-
                         <span class="validation-mark">*</span>
                     </small>
                 </strong>
@@ -113,16 +105,16 @@
             <div class="footer">
                 <div class="content">
                     <button class="cancel" @click="closeModal()">CANCEL</button>
-                    <button class="confirm" @click="addNewRecord()">CONFIRM</button>
-                    <!-- :disabled="!buttonEnable" -->
+                    <button class="confirm" :disabled="!buttonEnable" @click="addNewRecord()">CONFIRM</button>
+                   
                 </div>
             </div>
         </div>
-    </Modal>
+    </modal>
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount } from 'vue';
+import { defineComponent, ref, onBeforeMount, watch } from 'vue';
 
 import Modal from '@/components/common/Modal.vue'
 import { addNewOrder } from '@/api/reporting';
@@ -138,7 +130,7 @@ import { loadCustomers } from '@/api/customers';
 
 //loadCustomers
 
-import ErrorMessageHeader from '@/components/common/ErrorMessageHeader.vue';
+// import ErrorMessageHeader from '@/components/common/ErrorMessageHeader.vue';
 
 
 import Close_Icon from '@/assets/icons/Close_Icon.vue';
@@ -150,7 +142,7 @@ export default defineComponent({
         Close_Icon,
         // Down_Icon,
 
-        ErrorMessageHeader,
+        // ErrorMessageHeader,
         // Loader,
         Modal,
 
@@ -162,10 +154,9 @@ export default defineComponent({
         const buttonEnable = ref(false)
         const customers = ref()
         const products = ref()
-        const description = ref('')
-        const errorMessage = ref("")
-        const hasError = ref(false)
+        
 
+        // form
         const productId = ref('');
         const customerId = ref('');
         const requiredDate = ref('');
@@ -180,16 +171,20 @@ export default defineComponent({
 
         // let newRecord: Partial<IService> = {};
 
-        // watch(
-        //     () => [description.value, serviceKey.value],
-        //     () => {
-        //         if (description.value === '' || serviceKey.value === '') {
-        //             buttonEnable.value = false;
-        //         } else {
-        //             buttonEnable.value = true;
-        //         }
-        //     }
-        // );
+        watch(
+            () => [customerId.value, productId.value, requiredDate.value, shippedName.value, shippedAddress.value, shippedCity.value, shippedCountry.value, shippedPostalCode.value],
+            () => {
+                if (customerId.value === '' || productId.value === ''
+                    || requiredDate.value === '' || shippedName.value === '' || shippedAddress.value === '' || shippedCity.value === ''
+                    || shippedCountry.value === '' || shippedPostalCode.value === '') {
+                    buttonEnable.value = false;
+                } else {
+                    buttonEnable.value = true;
+                    //console.log('yes can!!!!!!');
+                    
+                }
+            }
+        );
 
         const getCustomers = async () => {
             // store.dispatch('ruleManagement/setRules', {});
@@ -203,7 +198,14 @@ export default defineComponent({
             console.log('products downloaded', products.value);
         };
 
-       
+
+        const validateNewRecord = () => {
+            if (customerId.value === '' || productId.value === ''
+                || requiredDate.value === '' || shippedName.value === '' || shippedAddress.value === '' || shippedCity.value === ''
+                || shippedCountry.value === '' || shippedPostalCode.value === '')
+                return false;
+            return true;
+        };
 
         const addNewRecord = () => {
 
@@ -216,62 +218,32 @@ export default defineComponent({
             // console.log("shippedCountry id== ", shippedCountry.value);
             // console.log("shippedPostalCode id== ", shippedPostalCode.value);
 
-            let newOrderRecord: Partial<IOrder> = {};
-            newOrderRecord.customerId = customerId.value;
-            newOrderRecord.productId = productId.value;
-            newOrderRecord.requiredDate = requiredDate.value;
-            newOrderRecord.shippedName = shippedName.value;
-            newOrderRecord.shippedAddress = shippedAddress.value;
-            newOrderRecord.shippedCity = shippedCity.value;
-            newOrderRecord.shippedCountry = shippedCountry.value;
-            newOrderRecord.shippedPostalCode = shippedPostalCode.value;
+            if (validateNewRecord()) {
 
-            // console.log('new rec ==> ', newOrderRecord);
+                let newOrderRecord: Partial<IOrder> = {};
+                newOrderRecord.customerId = customerId.value;
+                newOrderRecord.productId = productId.value;
+                newOrderRecord.requiredDate = requiredDate.value;
+                newOrderRecord.shippedName = shippedName.value;
+                newOrderRecord.shippedAddress = shippedAddress.value;
+                newOrderRecord.shippedCity = shippedCity.value;
+                newOrderRecord.shippedCountry = shippedCountry.value;
+                newOrderRecord.shippedPostalCode = shippedPostalCode.value;
 
-            let test = addNewOrder(newOrderRecord);
 
-             console.log('test ', test);
-             
-            
-            
-            // if (validateNewRecord()) {
-            //     newRecord.description = description.value;
-            //     newRecord.service_key = serviceKey.value;
-            //     newRecord.created_by = createdBy.value;
-            //     newRecord.created_by = loggedUser;
+                addNewOrder(newOrderRecord).then(() => {
+                    closeModal();
+                    updateList();
+                });
+            }
 
-            //     addSingleRecordToService(newRecord)
-            //         .then(() => {
-            //             showNotice({
-            //                 props: {
-            //                     type: 'success',
-            //                     duration: 5000,
-            //                     message: `Successfully added a new record`,
-            //                 },
-            //             });
-            //         })
-            //         .then(() => {
-            //             cleanModal();
-            //             closeModal();
-            //             updateList();
-            //         })
-            //         .catch((error) => {
-
-            //             let key = Object.keys(error.response.data)[0];
-            //             let errorObject = error.response.data[key];
-            //             key = key.split("_").join(" ");
-            //             key = key.charAt(0).toUpperCase() + key.slice(1);
-            //             hasError.value = true;
-            //             errorMessage.value = key + " - " + errorObject;
-
-            //         })
-            // }
+          
         };
 
-        const cleanModal = () => {
-            description.value = '';
-            serviceKey.value = ''
-        };
+        // const cleanModal = () => {
+        //     description.value = '';
+        //     serviceKey.value = ''
+        // };
 
         const closeModal = () => {
             context.emit('close-modal');
@@ -282,25 +254,17 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            // console.log(`the component is still not mounted.`)
             getCustomers()
             getProducts()
 
         })
 
-        const validateNewRecord = () => {
-            if (description.value === '' && serviceKey.value === '')
-                return false;
-            return true;
-        };
+
 
         return {
             buttonEnable,
             customers,
             customerId,
-            description,
-            errorMessage,
-            hasError,
             products,
             productId,
             serviceKey,
@@ -314,12 +278,13 @@ export default defineComponent({
             addNewRecord,
             closeModal,
             updateList
+
+
+           
         };
     },
 });
 </script>
   
-<!-- <style lang="scss" >
-// scoped src="@/styles/_rule-management-modal.scss"
-</style> -->
+
   

@@ -69,8 +69,8 @@ const api = (axios: Axios) => {
         axios.post<T>(url, body),//, { signal: controller.signal, ...config }
       put: <T>(url: string, body: object) =>//, config: any
         axios.put<T>(url, body),//, { signal: controller.signal, ...config }
-      // patch: (url: string, body: object, config: any) =>
-      //   axios.patch(url, body, { signal: controller.signal, ...config }),
+      patch: (url: string, body: object) =>//, config: any
+        axios.patch(url, body),//, { signal: controller.signal, ...config }
       delete: <T>(url: string) =>//, config: any
         axios.delete<T>(url),//, { signal: controller.signal, ...config }
       // cancel:() => cancelRequests(),

@@ -21,8 +21,8 @@ export const loadCategories = () => {
             resolve(response.data);
             // return  response.data
           } else {
-            // reject();
-            return null;
+            reject();
+            // return null;
           }
         })
         .catch((error: AxiosError) => {

@@ -23,7 +23,7 @@ export const loadOrders = () => {
           // return  response.data
         } else {
           reject();
-        //   return null;
+          //   return null;
         }
       })
       .catch((error: AxiosError) => {
@@ -31,45 +31,99 @@ export const loadOrders = () => {
       });
   });
 };
+export const getOrderDetails = (orderId: string) => {
+  // console.log('orderId ... ', orderId);
 
+  return new Promise((resolve, reject) => {
+    api
+      .get(URLS.orders + orderId + "/") //, {}
+      .then((response: AxiosResponse) => {
+        // console.log("response.data >>>", response.data);
 
-export const addNewOrder = (
-  newOrderRecord: Partial<IOrder>
-  ) => {
-    return new Promise((resolve, reject) => {
-      api
-        .post(
-          URLS.orders,
-          {
-           
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject();
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log("caught error in orderDetails >> ", error);
+      });
+  });
+};
 
-            customer: newOrderRecord.customerId,
-            product: newOrderRecord.productId,
-            order_date: new Date(),
-            required_date: newOrderRecord.requiredDate,
-            shipped_name:  newOrderRecord.shippedName,
-            shipped_address: newOrderRecord.shippedAddress,
-            shipped_city: newOrderRecord.shippedCity,
-            shipped_postal_code: newOrderRecord.shippedCountry,
-            shipped_country: newOrderRecord.shippedPostalCode   
+export const addNewOrder = (newOrderRecord: Partial<IOrder>) => {
+  return new Promise((resolve, reject) => {
+    api
+      .post(
+        URLS.orders,
+        {
+          customer: newOrderRecord.customerId,
+          product: newOrderRecord.productId,
+          order_date: new Date(),
+          required_date: newOrderRecord.requiredDate,
+          shipped_name: newOrderRecord.shippedName,
+          shipped_address: newOrderRecord.shippedAddress,
+          shipped_city: newOrderRecord.shippedCity,
+          shipped_postal_code: newOrderRecord.shippedCountry,
+          shipped_country: newOrderRecord.shippedPostalCode,
+        }
+        // {}
+      )
+      .then((response: AxiosResponse) => {
+        if (response.status === 201) {
+          resolve(response.data);
+        } else {
+          reject();
+        }
+      })
+      .catch((error) => {
+        console.log("caught error in addSingleRecordToService >> ", error);
+        return reject(error);
+      });
+  });
+};
 
+export const deleteRecordFromOrders = (id: string) => {
+  return new Promise((resolve, reject) => {
+    api
+      .delete(URLS.orders + id + "/")
+      .then((response: AxiosResponse) => {
+        if (response.status === 204) {
+          resolve(response.data);
+        } else {
+          reject();
+        }
+      })
+      .catch((error) => {
+        console.log("caught error in deleteRecordFromServices >> ", error);
+        reject(error);
+      });
+  });
+};
 
-          },
-          // {}
-        )
-        .then((response: AxiosResponse) => {
-          if (response.status === 201) {
-            resolve(response.data);
-          } else {
-            reject();
-          }
-        })
-        .catch((error) => {
-          console.log('caught error in addSingleRecordToService >> ', error);
-          return reject(error);
-        });
-    });
-  };
+export const editRecordInOrders = (id: string, editedOrder: IOrder) => {
+  return new Promise((resolve, reject) => {
+    api
+      .patch(URLS.orders + id + "/", {
+        shipped_name: editedOrder.shippedName,
+        shipped_address: editedOrder.shippedAddress,
+        shipped_city: editedOrder.shippedCity,
+        shipped_postal_code: editedOrder.shippedPostalCode,
+        shipped_country: editedOrder.shippedCountry,
+      }) //, {}
+      .then((response: AxiosResponse) => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject();
+        }
+      })
+      .catch((error) => {
+        console.log("caught error in editRecordInOrders >> ", error);
+      });
+  });
+};
 
 // == ADD THIS WHEN YOU FINISH WITH STYLE AND ORDERS TABLE ==
 export const loadProducts = () => {

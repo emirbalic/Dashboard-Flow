@@ -11,14 +11,14 @@
             <nav>
 
                 <section class="product-nav">
-                    <section :to="{ name: 'dashboard' }" class="is-data" :class="{
+                    <!-- <section :to="{ name: 'dashboard' }" class="is-data" :class="{
                         'single': routeProduct === 'dashboard'
                     }">
                         <a @click.prevent="defaultLink()">
                             <Home_Icon class="nav_icon" />
                             <span>Home</span>
                         </a>
-                    </section>
+                    </section> -->
 
 
                     <div class="section-title">DASHBOARDS</div>
@@ -42,10 +42,10 @@
                                 :class="{ 'router-link-exact-active': checkURL('products') }" class="each">
                                 Products
                             </router-link>
-                            <router-link :to="{ name: 'suppliers' }"
+                            <!-- <router-link :to="{ name: 'suppliers' }"
                                 :class="{ 'router-link-exact-active': checkURL('suppliers') }" class="each">
                                 Suppliers
-                            </router-link> 
+                            </router-link>  -->
 
                         </div>
                     </section>
