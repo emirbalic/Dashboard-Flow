@@ -82,6 +82,15 @@
       </tbody>
     </table>
   </div>
+  <pagination
+        :current-page="currentPage"
+        :is-tab-changed="isTabChanged"
+        :count="count"
+        :number-of-pages="numberOfPages"
+        @reset-tab="resetTabs"
+        @update-page="updatePage"
+        @update-table-size="updateTableSize"
+      ></pagination>
 </template>
 
 <script lang="ts">
@@ -98,6 +107,9 @@ import Sorting_Icon from '@/assets/icons/Sorting_Icon.vue';
 import Trash_Icon from '@/assets/icons/Trash_Icon.vue';
 import { IOrder } from '@/models/IOrder';
 
+import Pagination from '@/components/common/Pagination.vue';
+
+
 import CreateOrderModal from '../modals/CreateOrderModal.vue';
 import ConfirmDeleteModal from '../modals/ConfirmDeleteModal.vue';
 import EditOrderModal from '../modals/EditOrderModal.vue';
@@ -111,11 +123,60 @@ export default defineComponent({
     EditOrderModal,
 
     Edit_Icon,
+    Pagination,
     Plus_Icon,
     Sorting_Icon,
     Trash_Icon
   },
   setup() {
+
+    let assignPage = ref();
+
+    let currentPage = ref(
+      assignPage.value === undefined ? 1 : assignPage.value
+    );
+
+    let isTabChanged = ref<boolean>(false);
+      const updateRange = () => {
+      currentPage.value = 1;
+      updateList();
+    };
+
+    const numberOfPages = computed(() => {
+      const data = store.getters['actionlist/getNumberOfPages'];
+      return Number(data);
+    });
+    let maxPagesShown = ref(3);
+    let perPage = ref(10);
+    const pagesShown = computed(() => {
+      return maxPagesShown.value <= numberOfPages.value - currentPage.value
+        ? maxPagesShown.value
+        : numberOfPages.value - currentPage.value + 1;
+    });
+
+    const count = computed(() => {
+      const data = store.getters['actionlist/getCount'];
+      return Number(data);
+    });
+
+    const updatePage = (page: number) => {
+      if (page <= 0 || page > numberOfPages.value) return;
+      currentPage.value = page;
+      updateList();
+    };
+
+    const updateTableSize = (pageSize: any) => {
+      perPage.value = pageSize.value;
+      updateList();
+      updateRange();
+    };
+
+    const resetTabs = () => {
+      isTabChanged.value = false;
+    };
+
+
+
 
     const store = useStore();
 
@@ -266,9 +327,12 @@ export default defineComponent({
 
     const updateList = async () => {
 
-
-      orders.value = await loadOrders();
+let data: any = await loadOrders();
+      // 
       // console.log(orders.value);
+      console.log(data);
+      console.log(data.results);
+      orders.value = data.results;
 
 
     }
@@ -289,6 +353,15 @@ export default defineComponent({
     })
 
     return {
+
+      currentPage,
+isTabChanged,
+count,
+numberOfPages,
+resetTabs,
+updatePage,
+updateTableSize,
+
       ENTITY_TYPE,
       entityTitle,
 
