@@ -106,7 +106,7 @@
                 <div class="content">
                     <button class="cancel" @click="closeModal()">CANCEL</button>
                     <button class="confirm" :disabled="!buttonEnable" @click="addNewRecord()">CONFIRM</button>
-                   
+
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount, watch } from 'vue';
+import { defineComponent, ref, onBeforeMount, watch, computed } from 'vue';
 
 import Modal from '@/components/common/Modal.vue'
 import { addNewOrder } from '@/api/reporting';
@@ -135,6 +135,7 @@ import { loadCustomers } from '@/api/customers';
 
 import Close_Icon from '@/assets/icons/Close_Icon.vue';
 import { IOrder } from '@/models/IOrder';
+import { useStore } from 'vuex';
 
 
 export default defineComponent({
@@ -152,9 +153,24 @@ export default defineComponent({
     setup(_, context) {
 
         const buttonEnable = ref(false)
-        const customers = ref()
-        const products = ref()
-        
+
+
+        // const customers = ref()
+        // const products = ref()
+
+        const customers = computed(() => {
+            let data = store.getters['customerManagement/getCustomers'];
+            if (!data) return
+            return data;
+        });
+
+        const products = computed(() => {
+            let data = store.getters['productManagement/getProducts'];
+            if (!data) return
+            return data;
+        });
+
+
 
         // form
         const productId = ref('');
@@ -171,6 +187,9 @@ export default defineComponent({
 
         // let newRecord: Partial<IService> = {};
 
+        const store = useStore();
+
+
         watch(
             () => [customerId.value, productId.value, requiredDate.value, shippedName.value, shippedAddress.value, shippedCity.value, shippedCountry.value, shippedPostalCode.value],
             () => {
@@ -181,22 +200,33 @@ export default defineComponent({
                 } else {
                     buttonEnable.value = true;
                     //console.log('yes can!!!!!!');
-                    
+
                 }
             }
         );
 
-        const getCustomers = async () => {
-            // store.dispatch('ruleManagement/setRules', {});
-            customers.value = await loadCustomers();
-            console.log('customers downloaded');
+        const setDropdownData = async () => {
 
-        };
-        const getProducts = async () => {
-            // store.dispatch('ruleManagement/setRules', {});
-            products.value = await loadProducts();
-            console.log('products downloaded', products.value);
-        };
+
+
+            return Promise.allSettled([
+                store.dispatch('customerManagement/setCustomers', {}),
+                store.dispatch('productManagement/setProducts', {}),
+            ]);
+        }
+
+        ////OBSOLETE
+        // const getCustomers = async () => {
+        //     // store.dispatch('ruleManagement/setRules', {});
+        //     customers.value = await loadCustomers();
+        //     // console.log('customers downloaded', customers.value);
+
+        // };
+        // const getProducts = async () => {
+        //     // store.dispatch('ruleManagement/setRules', {});
+        //     products.value = await loadProducts();
+        //     // console.log('products downloaded', products.value);
+        // };
 
 
         const validateNewRecord = () => {
@@ -237,7 +267,7 @@ export default defineComponent({
                 });
             }
 
-          
+
         };
 
         // const cleanModal = () => {
@@ -254,8 +284,10 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            getCustomers()
-            getProducts()
+
+            setDropdownData()
+            // getCustomers()
+            // getProducts()
 
         })
 
@@ -280,7 +312,7 @@ export default defineComponent({
             updateList
 
 
-           
+
         };
     },
 });

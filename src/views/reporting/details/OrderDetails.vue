@@ -95,7 +95,16 @@ export default defineComponent({
         // };
 
         const getDetails = async () => {
+
+
             const details: any = await getOrderDetails(passedID.value);
+            // console.log('in details api', details);
+            
+            // const details1 = store.getters['orderManagement/getOrderDetails'];
+            // console.log('in details vuex', details1);
+            
+
+
 
             customer.value = details.customer.title + " " + details.customer.first_name + " " + details.customer.last_name
             product.value = details.product.product_name + ", " + details.product.category.name + ", " + details.product.category.description;
@@ -105,16 +114,16 @@ export default defineComponent({
             supplierInfo.value = "Phone: " + details.product.supplier.email + "Email: " + details.product.supplier.email
             requiredDate.value = formatDate(details.required_date)
 
-
-            // return Promise.allSettled([
-            //     store.dispatch('ruleManagement/setCallActions', {}),
-            //     store.dispatch('ruleManagement/setServices', {})
-            //         .then(() => {
-            //             checkId()
-            //         })
-            // ])
+            
         }
-
+        
+// return Promise.allSettled([
+//     store.dispatch('ruleManagement/setCallActions', {}),
+//     store.dispatch('ruleManagement/setServices', {})
+//         .then(() => {
+//             checkId()
+//         })
+// ])
 
 
         const store = useStore();

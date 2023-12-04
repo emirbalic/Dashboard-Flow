@@ -54,23 +54,23 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody >
+      <tbody>
         <!-- @click="openDetails() -->
-        <tr  v-for="(item, i) in orders" :key="i" >
-          
-          <td @click=openDetails(item.id)>{{ item.id }}</td>
-          <td @click=openDetails(item.id)>{{ formatDate(item.order_date) }}</td>
-          <td @click=openDetails(item.id)>{{ item.customer.last_name }}</td>
-          <td @click=openDetails(item.id)>{{ item.product.product_name }}</td>
-          <td @click=openDetails(item.id)>{{ formatDate(item.required_date) }}</td>
-          <td @click=openDetails(item.id)>{{ item.shipped_name }}</td>
-          <td @click=openDetails(item.id)>{{ item.shipped_address }}</td>
-          <td @click=openDetails(item.id)>{{ item.shipped_postal_code }}</td>
-          <td @click=openDetails(item.id)>{{ item.shipped_city }}</td>
-          <td @click=openDetails(item.id)>{{ item.shipped_country }}</td>
-          <td >
+        <tr v-for="(item, i) in orders" :key="i">
+
+          <td @click=openDetails(item)>{{ item.id }}</td>
+          <td @click=openDetails(item)>{{ formatDate(item.order_date) }}</td>
+          <td @click=openDetails(item)>{{ item.customer.last_name }}</td>
+          <td @click=openDetails(item)>{{ item.product.product_name }}</td>
+          <td @click=openDetails(item)>{{ formatDate(item.required_date) }}</td>
+          <td @click=openDetails(item)>{{ item.shipped_name }}</td>
+          <td @click=openDetails(item)>{{ item.shipped_address }}</td>
+          <td @click=openDetails(item)>{{ item.shipped_postal_code }}</td>
+          <td @click=openDetails(item)>{{ item.shipped_city }}</td>
+          <td @click=openDetails(item)>{{ item.shipped_country }}</td>
+          <td>
             <span>
-            
+
               <Edit_Icon class="table_icon" @click="openEditModal(item.id, item.shipped_name, item.shipped_address, item.shipped_city,
                 item.shipped_postal_code, item.shipped_country)" />
             </span>
@@ -82,15 +82,8 @@
       </tbody>
     </table>
   </div>
-  <pagination
-        :current-page="currentPage"
-        :is-tab-changed="isTabChanged"
-        :count="count"
-        :number-of-pages="numberOfPages"
-        @reset-tab="resetTabs"
-        @update-page="updatePage"
-        @update-table-size="updateTableSize"
-      ></pagination>
+  <pagination :current-page="currentPage" :is-tab-changed="isTabChanged" :count="count" :number-of-pages="numberOfPages"
+    @reset-tab="resetTabs" @update-page="updatePage" @update-table-size="updateTableSize"></pagination>
 </template>
 
 <script lang="ts">
@@ -137,7 +130,7 @@ export default defineComponent({
     );
 
     let isTabChanged = ref<boolean>(false);
-      const updateRange = () => {
+    const updateRange = () => {
       currentPage.value = 1;
       updateList();
     };
@@ -204,26 +197,33 @@ export default defineComponent({
 
     };
 
-    const orders = ref();
     const shippedName = ref('');
     const shippedPostalCode = ref('');
     const shippedCountry = ref('');
     const shippedCity = ref('');
     const shippedAddress = ref('');
 
-   
+    const setDataForDetailsPage = (item: IOrder) => {
+      return store.dispatch('orderManagement/setOrderDetails', {
+        ...item,
+      });
+    };
 
-    const openDetails = (id: string) => {
+    const openDetails = (item: IOrder) => {
+      let id = item.id
+      
+      setDataForDetailsPage(item);
+
       router.push({
         name: 'order-details',
         params: {
-        
+
           id,
-        
+
         }
       })
       console.log('going to details');
-      
+
     }
 
     // option: string, id: number, type: string
@@ -256,7 +256,7 @@ export default defineComponent({
 
       // console.log('deleting order nr. ',orderIdToDelete.value);
 
-      
+
       //   showNotice({
       //     props: {
       //       type: 'success',
@@ -325,19 +325,34 @@ export default defineComponent({
     //   return formattedData;
     // });
 
+    // const orders = ref();
+    const orders = computed(() => {
+      let data = store.getters['orderManagement/getOrders'];
+      // console.log('debugging data... ', data);
+
+      if (!data) return
+
+      return data;
+    });
+
     const updateList = async () => {
 
-let data: any = await loadOrders();
-      // 
-      // console.log(orders.value);
-      console.log(data);
-      console.log(data.results);
-      orders.value = data.results;
+      // and this is now obsolete for we are using the store
+      // // this is just because of pagination, originaly do the one line only
+      // let data: any = await loadOrders();
+      // orders.value = data.results;
 
-
+      return Promise.allSettled([
+        store.dispatch('orderManagement/setOrders', {}),      
+      ]);
     }
+
+
+
+
     const openCreateModal = () => {
       // console.log('opened');
+      
       isCreateModalVisible.value = true;
 
     };
@@ -355,12 +370,12 @@ let data: any = await loadOrders();
     return {
 
       currentPage,
-isTabChanged,
-count,
-numberOfPages,
-resetTabs,
-updatePage,
-updateTableSize,
+      isTabChanged,
+      count,
+      numberOfPages,
+      resetTabs,
+      updatePage,
+      updateTableSize,
 
       ENTITY_TYPE,
       entityTitle,

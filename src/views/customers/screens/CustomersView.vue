@@ -17,7 +17,7 @@
         <table>
             <thead>
                 <tr>
-                   
+
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Title</th>
@@ -36,11 +36,11 @@
                 <tr v-for="(item, i) in customers" :key="i">
                     <!-- <td>{{ item.id }}</td> -->
                     <!-- <td>{{ formatDate(item.order_date) }}</td> -->
-        
+
                     <td>{{ item.first_name }}</td>
                     <td>{{ item.last_name }}</td>
                     <td>{{ item.title }}</td>
-                   
+
                     <td>{{ item.gender }}</td>
                     <td>{{ item.address }}</td>
                     <td>{{ item.city }}</td>
@@ -85,7 +85,9 @@ export default defineComponent({
         const getOrders = async () => {
 
 
-            customers.value = await loadCustomers();
+            // this is just because of pagination, originaly do the one line only
+            let data: any = await loadCustomers();
+            customers.value = data.results;
             // console.log(customers.value);
 
 
@@ -115,7 +117,7 @@ export default defineComponent({
         getOrders();
 
         return {
-            customers, 
+            customers,
             // goToEdit,
             // openDeleteModal
         }

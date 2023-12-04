@@ -277,69 +277,6 @@
   
   <style lang="scss" scoped >
 
-.has-popup {
-    position: relative;
-    cursor: pointer;
-  }
-  
-  .popup {
-    position: absolute;
-    top: 0;
-    transform: scale(0);
-    transition: transform 0.1s ease-in;
-    font-size: 12px;
-    font-weight: 600;
-    color: #000;
-    background-color: white;
-    padding: 0.1rem 1rem;
-    border: 1px solid black;
-    border-radius: 5px;
-    white-space: nowrap;
-  }
-  .has-popup:hover span {
-    transform: translateX(-4rem) translateY(-0.8rem) scale(1);
-  }
-  
-  .container-body {
-    padding: 0 40px;
-    overflow-y: auto;
-    height: calc(100vh - 72px);
-  }
-  
-  .actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 18px;
-  
-    .icon {
-      height: 20px;
-      width: 20px;
-      vertical-align: -4px;
-    }
-    button {
-      padding: 8px 12px;
-      color: #fff;
-      font-family: 'Roboto';
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 16px;
-      letter-spacing: 0em;
-      background: #a4abb5;
-      border: none;
-      border-radius: 3px;
-    }
-  
-    .confirm {
-      background: #1caea1;
-    }
-  
-    .danger {
-      background: #dd3e33;
-    }
-  }
   .statistics {
     .container {
       display: grid;
@@ -459,11 +396,7 @@
           font-weight: bold;
         }
   
-        input[type='checkbox'] {
-          width: 18px;
-          height: 18px;
-          accent-color: #e0007a;
-        }
+      
       }
     }
   }
