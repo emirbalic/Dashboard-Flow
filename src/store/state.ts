@@ -1,4 +1,4 @@
-// import { IOrder } from '@/models/IOrder';
+import { IOrder } from '@/models/IOrder';
 import { GlobalState } from './types';
 
 const state = (): GlobalState => {
@@ -6,7 +6,7 @@ const state = (): GlobalState => {
     orders: [],
     products: [],
     customers: [],
-    // orderDetails: {} as IOrder,
+    orderDetails: {} as IOrder,
 
     // isLoggedIn: false,
     // serviceKeys: [],

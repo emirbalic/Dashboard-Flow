@@ -13,7 +13,7 @@ export interface GlobalState {
   products: IProduct[];
   orders: IOrder[];
   customers: ICustomer[];
-  // orderDetails: IOrder;
+  orderDetails: IOrder;
 
   //   isLoggedIn: boolean;
   //   serviceKeys: IServiceKey[];

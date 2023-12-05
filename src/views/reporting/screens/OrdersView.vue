@@ -227,7 +227,7 @@ export default defineComponent({
     }
 
     // option: string, id: number, type: string
-    const openEditModal = (id: string, name: string, address: string, postalCode: string, city: string, country: string) => {
+    const openEditModal = (id: string, name: string, address: string, city: string, postalCode: string, country: string) => {
       shippedName.value = name;
       shippedAddress.value = address;
       shippedCity.value = city;
@@ -236,8 +236,7 @@ export default defineComponent({
       orderIdToUpdate.value = id;
 
       isEditModalVisible.value = true;
-      // console.log('should open edit now?', isEditModalVisible.value);
-      // console.log('shippedName >> ', shippedName.value);
+      
     }
 
     const openDeleteModal = (id: string, title: string) => {
@@ -250,9 +249,13 @@ export default defineComponent({
 
     const handleDeleteRecord = () => {
       isDeleteModalVisible.value = false;
-      deleteRecordFromOrders(orderIdToDelete.value).then(() => {
+      //test your catch with
+      deleteRecordFromOrders('15')
+      deleteRecordFromOrders(orderIdToDelete.value)
+      .then(() => {
         updateList();
       })
+      .catch((error) => console.log(error))
 
       // console.log('deleting order nr. ',orderIdToDelete.value);
 
@@ -288,7 +291,9 @@ export default defineComponent({
           closeModal();
           updateList();
           orderIdToUpdate.value = '';
-        });
+        })
+        .catch(err => console.log(err)
+        );
     };
 
 

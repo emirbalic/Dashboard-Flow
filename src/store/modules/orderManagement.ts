@@ -9,7 +9,7 @@ import {
 
 import { GlobalState } from "@/store/types";
 // import { IOrder } from "@/models/IOrder";
-// import { IOrder } from '@/models/IOrder';
+import { IOrder } from '@/models/IOrder';
 
 export default {
   namespaced: true,
@@ -24,11 +24,11 @@ export default {
       // state.pageNumber = context.page;
       // state.count = context.count;
     },
+    SET_ORDER_DETAILS(state: GlobalState, context: IOrder) {
+      console.log("context is >> ", context);
+      state.orderDetails = context;
+    },
   },
-  // SET_ORDER_DETAILS(state: GlobalState, context: IOrder) {
-  //   console.log("context is >> ", context);
-  //   state.orderDetails = context;
-  // },
 
   //   SET_SERVICE_KEYS(state: GlobalState, context: any) {
   //     state.serviceKeys = context.results;
@@ -58,21 +58,21 @@ export default {
       return data.results;
     },
 
-    // async setOrderDetails(
-    //   { commit }: { commit: Commit },
-    //   payload: IOrder
-    // ) {
-    //   // console.log("before >> ", payload);
+    async setOrderDetails(
+      { commit }: { commit: Commit },
+      payload: IOrder
+    ) {
+      // console.log("before >> ", payload);
 
-    //   commit('SET_ORDER_DETAILS', payload);
-    //   // console.log("after >> ", payload);
-    //   // console.log("setting details with >> ", payload);
-    // },
+      commit('SET_ORDER_DETAILS', payload);
+      // console.log("after >> ", payload);
+      // console.log("setting details with >> ", payload);
+    },
   },
 
   getters: {
     getOrders(state: GlobalState) {
-      console.log(" getOrders debugging getters... ", state.orders);
+      // console.log(" getOrders debugging getters... ", state.orders);
       return state.orders;
     },
 
@@ -83,10 +83,10 @@ export default {
     //   return state.products;
     // },
 
-    // getOrderDetails(state: GlobalState) {
-    //   console.log(' getOrderDetails debugging getters... ', state.orderDetails);
-    //   return state.orderDetails;
-    // },
+    getOrderDetails(state: GlobalState) {
+      console.log(' getOrderDetails debugging getters... ', state.orderDetails);
+      return state.orderDetails;
+    },
 
     //   getReloadedActionlistDetails(state: GlobalState) {
     //     return state.actionListDetails;

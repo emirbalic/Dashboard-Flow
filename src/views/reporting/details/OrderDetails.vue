@@ -97,11 +97,15 @@ export default defineComponent({
         const getDetails = async () => {
 
 
-            const details: any = await getOrderDetails(passedID.value);
+            // const 
             // console.log('in details api', details);
             
-            // const details1 = store.getters['orderManagement/getOrderDetails'];
+            let details = store.getters['orderManagement/getOrderDetails'];
             // console.log('in details vuex', details1);
+
+            if (!details) {
+                details = await getOrderDetails(passedID.value);
+            }
             
 
 
