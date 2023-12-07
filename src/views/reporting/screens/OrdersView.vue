@@ -4,6 +4,7 @@
     <span class="title">
       Reporting / Orders
     </span>
+
     <button class="button is-primary" style="margin-right: 2.8rem;" @click="openCreateModal">
       <Plus_Icon class="nav_icon" />
       New order
@@ -13,6 +14,39 @@
 
   <!-- @click="closeDropdown" -->
   <div class="body">
+    <div class="filters">
+      <div class="filter-wrapper">
+        <p>Shipped country:</p>
+        <!--  -->
+        <select id="select" v-model="filteredCountry">
+          <option value="all">All countries</option>
+          <option v-for="(country, i) in countries" :key="i" :value="country">
+            {{ country }}</option>
+        </select>
+      </div>
+      <div class="filter-wrapper">
+        <p>Shipped city:</p>
+        <!-- v-model="selectedService" id="select" -->
+        <select v-model="filteredCity">
+          <option value="all">All cities</option>
+          <option v-for="(city, i) in cities" :key="i" :value="city">
+            {{ city }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-wrapper">
+        <p>Search:</p>
+        <input type="text" placeholder="Search on values" class="attach_input" v-model="search"
+          @keyup.enter="filterList" />
+        <button class="attach_button" @click="filterList">
+          <Search_Icon class="btn-icon" />
+        </button>
+      </div>
+      <div class="filter-wrapper">
+        <p>Refresh:</p>
+       <button class="refresh_button" @click="refreshList">REFRESH</button>
+      </div>
+    </div>
 
     <!-- after creating table -->
     <create-order-modal v-if="isCreateModalVisible" @close-modal="closeModal" @update-list="updateList">
@@ -89,7 +123,7 @@
 <script lang="ts">
 import { onBeforeMount, computed, defineComponent, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
 import { deleteRecordFromOrders, editRecordInOrders, loadOrders } from '@/api/reporting';
 
@@ -98,6 +132,7 @@ import Edit_Icon from '@/assets/icons/Edit_Icon.vue';
 import Plus_Icon from '@/assets/icons/Plus_Icon.vue';
 import Sorting_Icon from '@/assets/icons/Sorting_Icon.vue';
 import Trash_Icon from '@/assets/icons/Trash_Icon.vue';
+import Search_Icon from '@/assets/icons/Search_Icon.vue';
 import { IOrder } from '@/models/IOrder';
 
 import Pagination from '@/components/common/Pagination.vue';
@@ -107,7 +142,12 @@ import CreateOrderModal from '../modals/CreateOrderModal.vue';
 import ConfirmDeleteModal from '../modals/ConfirmDeleteModal.vue';
 import EditOrderModal from '../modals/EditOrderModal.vue';
 import router from '@/router';
-import formatDate from '@/composables/util'
+import { formatDate } from '@/composables/util'
+// import { extractValues } from '@/composables/util'
+
+import { loadCountries } from '@/api/common';
+import { loadCities } from '@/api/common';
+
 
 export default defineComponent({
   components: {
@@ -115,6 +155,7 @@ export default defineComponent({
     ConfirmDeleteModal,
     EditOrderModal,
 
+    Search_Icon,
     Edit_Icon,
     Pagination,
     Plus_Icon,
@@ -169,7 +210,46 @@ export default defineComponent({
     };
 
 
+    // const extractValues = (data: any) => {
+    //   var names = data.map( (item: any) => {
+    //     return item['shipped_city'];
+    //   });
+    //   return names
+    // }
+    const cities = ref();
 
+    const getCities = async () => {
+
+
+
+      let data: any = await loadCities();
+
+      // var names = extractValues(data);
+      var names = data.map((item: any) => {
+        return item['shipped_city'];
+      });
+
+      cities.value = names;
+      // console.log(cities.value);
+      // console.log(names);
+
+
+    }
+    const countries = ref();
+
+    const getCountries = async () => {
+
+      let data: any = await loadCountries();
+      var names = data.map((item: any) => {
+        return item['shipped_country'];
+      });
+      // var names = extractValues(data);
+      countries.value = names;
+      // console.log(names);
+      // console.log(countries.value);
+
+
+    }
 
     const store = useStore();
 
@@ -211,7 +291,7 @@ export default defineComponent({
 
     const openDetails = (item: IOrder) => {
       let id = item.id
-      
+
       setDataForDetailsPage(item);
 
       router.push({
@@ -222,7 +302,7 @@ export default defineComponent({
 
         }
       })
-      console.log('going to details');
+      // console.log('going to details');
 
     }
 
@@ -236,7 +316,7 @@ export default defineComponent({
       orderIdToUpdate.value = id;
 
       isEditModalVisible.value = true;
-      
+
     }
 
     const openDeleteModal = (id: string, title: string) => {
@@ -252,10 +332,10 @@ export default defineComponent({
       //test your catch with
       deleteRecordFromOrders('15')
       deleteRecordFromOrders(orderIdToDelete.value)
-      .then(() => {
-        updateList();
-      })
-      .catch((error) => console.log(error))
+        .then(() => {
+          updateList();
+        })
+        .catch((error) => console.log(error))
 
       // console.log('deleting order nr. ',orderIdToDelete.value);
 
@@ -272,7 +352,6 @@ export default defineComponent({
     const handleEditRecord = (editedOrder: any) => {
       isEditModalVisible.value = false;
 
-      console.log('this is editedOrder', editedOrder);
 
 
       editRecordInOrders(
@@ -340,24 +419,45 @@ export default defineComponent({
       return data;
     });
 
+    const filteredCountry = ref('');
+    const filteredCity = ref('');
+    const search = ref('');
+
     const updateList = async () => {
 
-      // and this is now obsolete for we are using the store
+      // ====== and this is now obsolete for we are using the store
       // // this is just because of pagination, originaly do the one line only
       // let data: any = await loadOrders();
       // orders.value = data.results;
 
+      //   console.log('filteredCountry', filteredCountry.value);
+      // console.log('filteredCity', filteredCity.value);
+      // console.log('search', search.value);
+
       return Promise.allSettled([
-        store.dispatch('orderManagement/setOrders', {}),      
+        store.dispatch('orderManagement/setOrders', {
+          filteredCountry: filteredCountry.value,
+          filteredCity: filteredCity.value,
+          search: search.value
+        }),
       ]);
     }
 
+    const filterList = () => {
+      
+      updateList()
+    }
+    const refreshList = () => {
+      filteredCountry.value = '';
+      filteredCity.value = '';
+      search.value = '';
 
-
+      updateList()
+    }
 
     const openCreateModal = () => {
       // console.log('opened');
-      
+
       isCreateModalVisible.value = true;
 
     };
@@ -370,6 +470,8 @@ export default defineComponent({
     onBeforeMount(() => {
       // console.log(`the component is still not mounted.`)
       updateList()
+      getCities()
+      getCountries()
     })
 
     return {
@@ -385,11 +487,19 @@ export default defineComponent({
       ENTITY_TYPE,
       entityTitle,
 
+      cities,
+      countries,
+
       isCreateModalVisible,
       isDeleteModalVisible,
       isEditModalVisible,
 
       orders,
+
+      filteredCountry,
+      filteredCity,
+      search,
+      // const ruleId = ref<number>();
 
       shippedName,
       shippedAddress,
@@ -399,8 +509,10 @@ export default defineComponent({
 
       // closeDropdown,
       openDetails,
+      refreshList,
 
       closeModal,
+      filterList,
       formatDate,
       openEditModal,
       handleDeleteRecord,
@@ -413,4 +525,20 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// .attach_button {
+//     margin-left: 0px;
+//     border: none;
+//     color: white;
+//     background-color: $color-brand-1;
+//     border-radius: 0 10px 10px 0;
+//     width: 4rem;
+//     height: 3.5rem;
+
+//     &:hover {
+//         background-color: $color-brand-action-1;
+//         border-color: $color-brand-action-1;
+//         cursor: pointer;
+//     }
+// }
+</style>

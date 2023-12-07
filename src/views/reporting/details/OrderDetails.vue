@@ -68,7 +68,8 @@ import { useRoute } from 'vue-router'
 import { getOrderDetails } from '@/api/reporting';
 
 import Back_Icon from '@/assets/icons/Back_Icon.vue';
-import formatDate from '@/composables/util'
+import {formatDate} from '@/composables/util'
+
 
 
 export default defineComponent({

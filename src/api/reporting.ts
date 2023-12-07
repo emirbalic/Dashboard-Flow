@@ -9,12 +9,20 @@ const URLS = {
   suppliers: "suppliers/",
 };
 
-export const loadOrders = () => {
-  // console.log('loading ... ');
-
+export const loadOrders = (
+  shipped_country: string,
+  shipped_city: string,
+  search: string
+) => {
   return new Promise((resolve, reject) => {
     api
-      .get(URLS.orders) //, {}
+      .get(URLS.orders, {
+        params: {
+          shipped_country,
+          shipped_city,
+          search,
+        },
+      })
       .then((response: AxiosResponse) => {
         // console.log(response.data);
 
@@ -36,7 +44,7 @@ export const getOrderDetails = (orderId: string) => {
 
   return new Promise((resolve, reject) => {
     api
-      .get(URLS.orders + orderId + "/") //, {}
+      .get(URLS.orders + orderId + "/", {}) //, {}
       .then((response: AxiosResponse) => {
         // console.log("response.data >>>", response.data);
 
@@ -65,8 +73,8 @@ export const addNewOrder = (newOrderRecord: Partial<IOrder>) => {
           shipped_name: newOrderRecord.shippedName,
           shipped_address: newOrderRecord.shippedAddress,
           shipped_city: newOrderRecord.shippedCity,
-          shipped_postal_code: newOrderRecord.shippedCountry,
-          shipped_country: newOrderRecord.shippedPostalCode,
+          shipped_postal_code: newOrderRecord.shippedPostalCode,
+          shipped_country: newOrderRecord.shippedCountry, 
         }
         // {}
       )
@@ -131,7 +139,7 @@ export const loadProducts = () => {
 
   return new Promise((resolve, reject) => {
     api
-      .get(URLS.products) //, {}
+      .get(URLS.products, {}) //, {}
       .then((response: AxiosResponse) => {
         // console.log(response.data);
 
@@ -153,7 +161,7 @@ export const loadSuppliers = () => {
 
   return new Promise((resolve, reject) => {
     api
-      .get(URLS.suppliers) //, {}
+      .get(URLS.suppliers, {}) //, {}
       .then((response: AxiosResponse) => {
         // console.log(response.data);
 

@@ -63,8 +63,8 @@ const api = (axios: Axios) => {
     // }
   
     return {
-      get: <T>(url: string) =>//, config: any
-        axios.get<T>(url),//, { signal: controller.signal, ...config }
+      get: <T>(url: string , config: any) =>
+        axios.get<T>(url, {...config}),
       post: <T>(url: string, body: object) =>//, config: any
         axios.post<T>(url, body),//, { signal: controller.signal, ...config }
       put: <T>(url: string, body: object) =>//, config: any
@@ -78,3 +78,10 @@ const api = (axios: Axios) => {
   };
 
   export default api(axiosInstance);
+
+
+  // get: <T>(url: string ) =>//, config: any
+  // axios.get<T>(url),//, { signal: controller.signal, ...config }
+
+
+ 

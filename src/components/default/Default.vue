@@ -37,7 +37,7 @@ export default defineComponent({
         const addOrder = async () => {
 
 
-            orders.value = await loadOrders();
+            // orders.value = await loadOrders({});
             console.log(orders.value);
 
 

@@ -40,6 +40,116 @@
   }
 }
 
+// add when adding filters to the frontend
+.filters{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  top: 10px;
+
+  .filter-wrapper{
+    position: relative;
+    p{
+      position: absolute;
+      font-family: 'IBM Plex Sans';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 18px;
+      color: #313F57;
+      top: -35px;
+      left: 15px;
+    }
+    
+    // input::-webkit-outer-spin-button,
+    // input::-webkit-inner-spin-button {
+    //     -webkit-appearance: none;
+    //     margin: 0;
+    // }
+    // .icon{
+    //   position: absolute;
+    //   top: 10px;
+    //   right: 26px;
+    // }
+  }
+  input,
+  select{
+    min-width: 260px;
+    margin-right: 20px;
+    border: 1px solid #E4E3E1;
+    border-radius: 5px;
+    padding: 10px 25px 10px 15px;
+    max-height: 40px;
+
+    font-family: 'IBM Plex Sans' !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    // border-color: red;
+    
+    &:focus{
+      outline: none;
+    }
+    // -moz-appearance: none;
+    // -webkit-appearance: none;
+    // .upper {
+    //   padding-top: 1px;
+    // }
+  }
+  // select::-ms-expand {
+  //   display: none;
+  // }
+
+  .attach_input {
+    padding-right: 40px !important;
+    // margin-right: 0px !important;
+    min-width: 260px;
+    border-radius: 5px 0 0 10px !important;
+    // height: 3.5rem;
+}
+  
+  .attach_button {
+    margin-left: -20px;
+    margin-right: 20px;
+    border: none;
+    color: white;
+    background-color: $color-brand-1;
+    border-radius: 0 5px 5px 0;
+    width: 60px;
+    height: 40px;
+
+    // .btn-icon{
+    //   vertical-align: 1px;
+    // }
+
+    &:hover {
+        background-color: $color-brand-action-1;
+        border-color: $color-brand-action-1;
+    }
+  }
+  
+  .refresh_button {
+    min-width: 260px;
+    margin-right: 20px;
+    border: none;
+    color: white;
+    background-color: $color-brand-1;
+    border-radius: 5px;
+    width: 60px;
+    height: 40px;
+
+    &:hover {
+        background-color: $color-brand-action-1;
+        border-color: $color-brand-action-1;
+    }
+  }
+
+  .is-primary{
+    padding: 8px 15px !important;
+  }
+}
+
 
 
 
