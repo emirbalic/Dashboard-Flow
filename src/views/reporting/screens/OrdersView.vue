@@ -1,4 +1,5 @@
-<template>
+<template >
+  <!-- v-if="pageReady" -->
   <!-- <div class="settings-screen"> -->
   <header>
     <span class="title">
@@ -35,16 +36,18 @@
         </select>
       </div>
       <div class="filter-wrapper">
+
         <p>Search:</p>
-        <input type="text" placeholder="Search on values" class="attach_input" v-model="search"
-          @keyup.enter="filterList" />
-        <button class="attach_button" @click="filterList">
-          <Search_Icon class="btn-icon" />
-        </button>
+        <input type="text" placeholder="Search on values" v-model="search" @keyup.enter="filterList" />
+
+      </div>
+      <div class="filter-wrapper">
+        <p>Filter:</p>
+        <button class="refresh_button" @click="filterList">Filter</button>
       </div>
       <div class="filter-wrapper">
         <p>Refresh:</p>
-       <button class="refresh_button" @click="refreshList">REFRESH</button>
+        <button class="refresh_button" @click="refreshList">Refresh</button>
       </div>
     </div>
 
@@ -65,13 +68,15 @@
     </edit-order-modal>
 
 
-    <h3>System found {{ orders?.length }} orders</h3>
+    <h3>System loaded {{ orders?.length }} orders</h3>
+    
 
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Order date<Sorting_Icon style="vertical-align: -5px; margin-left: 5px;"></Sorting_Icon>
+          <!-- Only add icons in sorting lesson -->
+          <th @click=sortingByDate(ORDERBYID)>ID <Sorting_Icon class="sorting-icon" :class="orderBy==='id' ? 'active-sorting': ''"></Sorting_Icon></th>
+          <th @click=sortingByDate(ORDERBYDATE)>Order date<Sorting_Icon class="sorting-icon" :class="orderBy==='order_date' ? 'active-sorting': ''"></Sorting_Icon>
           </th>
           <th>Customer Name</th>
           <th>Product Name</th>
@@ -116,8 +121,18 @@
       </tbody>
     </table>
   </div>
-  <pagination :current-page="currentPage" :is-tab-changed="isTabChanged" :count="count" :number-of-pages="numberOfPages"
-    @reset-tab="resetTabs" @update-page="updatePage" @update-table-size="updateTableSize"></pagination>
+
+  {{ perPage }}
+  <!-- @reset-tab="resetTabs" -->
+  <pagination v-if="count > 0" :current-page="currentPage" :per-page="perPage" 
+    :is-tab-changed="isTabChanged" :number-of-pages="numberOfPages" :count="count" @update-page="updatePage"
+    @update-table-size="updateTableSize">
+  </pagination>
+  <div v-else class="no-records">
+    <h2>
+      No records found!
+    </h2>
+  </div>
 </template>
 
 <script lang="ts">
@@ -143,7 +158,7 @@ import ConfirmDeleteModal from '../modals/ConfirmDeleteModal.vue';
 import EditOrderModal from '../modals/EditOrderModal.vue';
 import router from '@/router';
 import { formatDate } from '@/composables/util'
-// import { extractValues } from '@/composables/util'
+import { extractValues } from '@/composables/util'
 
 import { loadCountries } from '@/api/common';
 import { loadCities } from '@/api/common';
@@ -164,6 +179,11 @@ export default defineComponent({
   },
   setup() {
 
+    // === for sorting ===
+
+    const ORDERBYID = 'id'
+    const ORDERBYDATE = 'order_date'
+
     let assignPage = ref();
 
     let currentPage = ref(
@@ -176,25 +196,46 @@ export default defineComponent({
       updateList();
     };
 
+
+
+    // const numberOfPages = ref(0)
+
     const numberOfPages = computed(() => {
-      const data = store.getters['actionlist/getNumberOfPages'];
+      const data = store.getters['orderManagement/getNumberOfPages'];
+      // console.log('orderManagement/getNumberOfPages _________________', data);
+
       return Number(data);
     });
-    let maxPagesShown = ref(3);
-    let perPage = ref(10);
-    const pagesShown = computed(() => {
-      return maxPagesShown.value <= numberOfPages.value - currentPage.value
-        ? maxPagesShown.value
-        : numberOfPages.value - currentPage.value + 1;
-    });
+
+    // const getNumberOfPages = () => {
+    //   const data = store.getters['orderManagement/getNumberOfPages'];
+    //   console.log('orderManagement/getNumberOfPages _________________', data);
+    //   numberOfPages.value = data
+    //   // return numberOfPages.value
+
+    //   // return Number(data);
+    // };
+
+    // let maxPagesShown = ref();
+    let perPage = ref(5);
+
+    // const pagesShown = computed(() => {
+    //   return maxPagesShown.value <= numberOfPages.value - currentPage.value
+    //     ? maxPagesShown.value
+    //     : numberOfPages.value - currentPage.value + 1;
+    // });
 
     const count = computed(() => {
-      const data = store.getters['actionlist/getCount'];
+      const data = store.getters['orderManagement/getCount'];
+      // console.log('orderManagement/getCount in OrdersView +++++++++', data);
+
       return Number(data);
     });
 
     const updatePage = (page: number) => {
-      if (page <= 0 || page > numberOfPages.value) return;
+      // if (page <= 0 || page > numberOfPages.value) return;
+      // console.warn('tab is updated!')
+
       currentPage.value = page;
       updateList();
     };
@@ -205,50 +246,30 @@ export default defineComponent({
       updateRange();
     };
 
-    const resetTabs = () => {
-      isTabChanged.value = false;
-    };
+    // const resetTabs = () => {
+    //   console.log('tab is changed');
+    //   alert('tab is changed!')
+    //   isTabChanged.value = false;
+    // };
 
-
-    // const extractValues = (data: any) => {
-    //   var names = data.map( (item: any) => {
-    //     return item['shipped_city'];
-    //   });
-    //   return names
-    // }
-    const cities = ref();
-
-    const getCities = async () => {
-
-
-
-      let data: any = await loadCities();
-
-      // var names = extractValues(data);
-      var names = data.map((item: any) => {
-        return item['shipped_city'];
-      });
-
-      cities.value = names;
-      // console.log(cities.value);
-      // console.log(names);
-
-
+    const filterList = () => {
+      // updatePage(1) // added for items number update
+      updateList()
     }
+
+
+
+    const cities = ref();
     const countries = ref();
 
+    const getCities = async () => {
+      let data: any = await loadCities();
+      cities.value = extractValues(data);
+    }
+
     const getCountries = async () => {
-
       let data: any = await loadCountries();
-      var names = data.map((item: any) => {
-        return item['shipped_country'];
-      });
-      // var names = extractValues(data);
-      countries.value = names;
-      // console.log(names);
-      // console.log(countries.value);
-
-
+      countries.value = extractValues(data);;
     }
 
     const store = useStore();
@@ -330,15 +351,12 @@ export default defineComponent({
     const handleDeleteRecord = () => {
       isDeleteModalVisible.value = false;
       //test your catch with
-      deleteRecordFromOrders('15')
+      // deleteRecordFromOrders('15')
       deleteRecordFromOrders(orderIdToDelete.value)
         .then(() => {
           updateList();
         })
         .catch((error) => console.log(error))
-
-      // console.log('deleting order nr. ',orderIdToDelete.value);
-
 
       //   showNotice({
       //     props: {
@@ -423,6 +441,8 @@ export default defineComponent({
     const filteredCity = ref('');
     const search = ref('');
 
+    const orderBy = ref('id')
+
     const updateList = async () => {
 
       // ====== and this is now obsolete for we are using the store
@@ -430,28 +450,35 @@ export default defineComponent({
       // let data: any = await loadOrders();
       // orders.value = data.results;
 
-      //   console.log('filteredCountry', filteredCountry.value);
-      // console.log('filteredCity', filteredCity.value);
-      // console.log('search', search.value);
+      
 
       return Promise.allSettled([
         store.dispatch('orderManagement/setOrders', {
           filteredCountry: filteredCountry.value,
           filteredCity: filteredCity.value,
-          search: search.value
+          search: search.value,
+          per_page: perPage.value,
+          page: currentPage.value,
+          // add in sorting lesson
+          order_by: orderBy.value
         }),
+        
       ]);
     }
 
-    const filterList = () => {
-      
+    // console.log('**************** sorting after click >>> ', orderBy.value);
+    const sortingByDate = async(ordering: string) => {
+      await store.dispatch('orderManagement/setSorting', ordering);
+      orderBy.value = store.getters['orderManagement/getSorting'];
       updateList()
-    }
+    };
+
+   
+
     const refreshList = () => {
       filteredCountry.value = '';
       filteredCity.value = '';
       search.value = '';
-
       updateList()
     }
 
@@ -467,22 +494,48 @@ export default defineComponent({
     //   // closeModal()
     // };
 
+
+
     onBeforeMount(() => {
       // console.log(`the component is still not mounted.`)
       updateList()
+      
+      // getNumberOfPages()
+
       getCities()
       getCountries()
+
     })
 
-    return {
+    // updateList()
+      
+    // getNumberOfPages()
 
+    // getCities()
+    // getCountries()
+
+    // updateList()
+    // getCities()
+    // getCountries()
+    // getNumberOfPages()
+
+    return {
+      // for sorting constants::
+
+      ORDERBYID,
+      ORDERBYDATE,
+      orderBy,
+      // pageReady,
       currentPage,
       isTabChanged,
       count,
       numberOfPages,
-      resetTabs,
+      // resetTabs,
       updatePage,
       updateTableSize,
+
+      // maxPagesShown,
+      // pagesShown,
 
       ENTITY_TYPE,
       entityTitle,
@@ -495,6 +548,7 @@ export default defineComponent({
       isEditModalVisible,
 
       orders,
+      perPage,
 
       filteredCountry,
       filteredCity,
@@ -511,6 +565,8 @@ export default defineComponent({
       openDetails,
       refreshList,
 
+      sortingByDate,
+
       closeModal,
       filterList,
       formatDate,
@@ -526,6 +582,28 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.no-records {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  font-size: x-large;
+  color: red;
+}
+
+.sorting-icon {
+
+  vertical-align: -5px; 
+  margin-left: 5px;
+  
+
+}
+
+.active-sorting {
+  border-radius: 50%;
+  background-color: $color-acitive;
+  padding-left: 2px;
+}
+
 // .attach_button {
 //     margin-left: 0px;
 //     border: none;

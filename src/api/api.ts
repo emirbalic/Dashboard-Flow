@@ -8,7 +8,7 @@ const baseUrl = 'http://localhost:8000'
 
 const api = (axios: Axios) => {
   
-    const controller = new AbortController();
+    // const controller = new AbortController();
     // subscribe('auth', (auth: IAuth) => {
   
     //   if (auth) {

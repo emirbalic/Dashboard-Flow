@@ -101,33 +101,33 @@
   //   display: none;
   // }
 
-  .attach_input {
-    padding-right: 40px !important;
-    // margin-right: 0px !important;
-    min-width: 260px;
-    border-radius: 5px 0 0 10px !important;
-    // height: 3.5rem;
-}
+//   .attach_input {
+//     padding-right: 40px !important;
+//     // margin-right: 0px !important;
+//     min-width: 160px;
+//     border-radius: 5px;// 0 0 10px !important;
+//     // height: 3.5rem;
+// }
   
-  .attach_button {
-    margin-left: -20px;
-    margin-right: 20px;
-    border: none;
-    color: white;
-    background-color: $color-brand-1;
-    border-radius: 0 5px 5px 0;
-    width: 60px;
-    height: 40px;
+  // .attach_button {
+  //   margin-left: -20px;
+  //   margin-right: 20px;
+  //   border: none;
+  //   color: white;
+  //   background-color: $color-brand-1;
+  //   border-radius: 0 5px 5px 0;
+  //   width: 60px;
+  //   height: 40px;
 
-    // .btn-icon{
-    //   vertical-align: 1px;
-    // }
+  //   // .btn-icon{
+  //   //   vertical-align: 1px;
+  //   // }
 
-    &:hover {
-        background-color: $color-brand-action-1;
-        border-color: $color-brand-action-1;
-    }
-  }
+  //   &:hover {
+  //       background-color: $color-brand-action-1;
+  //       border-color: $color-brand-action-1;
+  //   }
+  // }
   
   .refresh_button {
     min-width: 260px;

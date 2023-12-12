@@ -12,7 +12,7 @@
     <div class="body">
 
 
-        <h3>System found {{ customers?.length }} customers</h3>
+        <h3>System loaded {{ customers?.length }} customers</h3>
 
         <table>
             <thead>

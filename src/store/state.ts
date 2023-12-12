@@ -13,10 +13,16 @@ const state = (): GlobalState => {
     // actionlists: [],
     // users: [],
     // actionlistId: 0,
-    // pages: 0,
-    // pageNumber: 1,
-    // count: 0,
-    // paginationDetailedInfo: {},
+    pages: 0,
+    pageNumber: 1,
+    count: 0,
+    numberOfPages: 0,
+    paginationDetailedInfo: {},
+    // perPage: 5,
+
+    // sorting: false,
+    orderBy: ''
+    // initialRightDistance: 0
 
     /*.
      * rule managemetn structure

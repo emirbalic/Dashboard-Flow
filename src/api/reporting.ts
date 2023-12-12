@@ -9,11 +9,18 @@ const URLS = {
   suppliers: "suppliers/",
 };
 
+
 export const loadOrders = (
   shipped_country: string,
   shipped_city: string,
-  search: string
+  search: string,
+  page: string,
+  page_size: string,
+  // add in sorting lesson
+  order_by: string
 ) => {
+  // console.log('order_by reporting: ', order_by);
+  // console.log('page_size reporting: ', page_size);
   return new Promise((resolve, reject) => {
     api
       .get(URLS.orders, {
@@ -21,12 +28,18 @@ export const loadOrders = (
           shipped_country,
           shipped_city,
           search,
+          page,
+          page_size,
+          // add in sorting lesson
+          order_by
+          
         },
       })
       .then((response: AxiosResponse) => {
         // console.log(response.data);
 
         if (response.status === 200) {
+          // console.log('ecco ',response.data.number_of_pages);
           resolve(response.data);
           // return  response.data
         } else {
@@ -61,6 +74,9 @@ export const getOrderDetails = (orderId: string) => {
 };
 
 export const addNewOrder = (newOrderRecord: Partial<IOrder>) => {
+
+  let yesterday = new Date;
+  yesterday.setDate(yesterday.getDate() - 10)
   return new Promise((resolve, reject) => {
     api
       .post(
