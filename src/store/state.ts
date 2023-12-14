@@ -8,7 +8,7 @@ const state = (): GlobalState => {
     customers: [],
     orderDetails: {} as IOrder,
 
-    // isLoggedIn: false,
+    isLoggedIn: false,
     // serviceKeys: [],
     // actionlists: [],
     // users: [],

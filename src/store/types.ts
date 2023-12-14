@@ -15,7 +15,7 @@ export interface GlobalState {
   customers: ICustomer[];
   orderDetails: IOrder;
 
-  //   isLoggedIn: boolean;
+    isLoggedIn: boolean;
   //   serviceKeys: IServiceKey[];
   //   actionlists: IActionList[];
   //   users: IUser[];
