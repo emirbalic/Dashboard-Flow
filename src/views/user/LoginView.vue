@@ -42,8 +42,10 @@
   import { useStore } from 'vuex';
   import router from '@/router';
   import { authenticate } from '@/api/authenticate';
+  import { save as saveToStore } from '@/composables/storage';
+
+
   // import { errLog } from '@/utils/dev';
-  // import { save as saveToStore } from '@/services/store';
   // import { showNotice } from '@/services/view';
   
   import { ILoginCredentials} from '@/models/IUtilModels'
@@ -54,6 +56,7 @@
     //   Container,
     // },
     setup() {
+      let baseUrl ="http://localhost:8000"
       // let baseUrl = process.env.VUE_APP_API_URL;
       // const isLoading = ref(false);
       // const pageLoading = ref(true);
@@ -76,93 +79,92 @@
       //   return Object.values(input.value).every(Boolean);
       // });
       
-    //   const input = ref({
-    //   username: '',
-    //   password: '',
-    // });
+      const input = ref({
+      username: '',
+      password: '',
+    });
 
-    let baseUrl ="http://localhost:8000"
-    // const login = async () => {
-    //   const { username, password: _password } = input.value;
-    //   // isLoading.value = true;
-
-    //   const body: ILoginCredentials = {
-    //     username: "admin",
-    //     password: "Pa$$w0rd",
-    //     apiRoot:baseUrl
-    //   }
-
-    //   const response = await authenticate(body);
-
-    //   if(response !== undefined && response.status === 401) {
-    //     console.warn('error logging !!!!')
-    //     // // isLoading.value = false;
-    //     // errLog('Login', response.status );
-    //     //   showNotice({
-    //     //     props: {
-    //     //       type: 'error',
-    //     //       duration: 5000,
-    //     //       message: `Seems like an error has occurred!: ${
-    //     //         response.data.detail || 'Unknown error'
-    //     //       }.`,
-    //     //     },
-    //     //   });
-    //   } else if (response !== undefined && response.status === 200) {
-
-    //     console.info(' logging successfull !!!!')
-
-    //     debugger
-    //     // saveToStore('auth', {
-    //     //     username,
-    //     //     apiRoot:baseUrl,
-    //     //     isAdmin: response.data.is_admin,
-    //     //     access_token: response.data.access,
-    //     //     requiresReset: response.data.requires_reset,
-    //     //     isAllowed: !response.data.requires_reset,
-    //     //   });
-
-    //       //!!todo!!
-    //       // store.dispatch('user/loginUser', true);
-    //       // isLoading.value = false;
-
-    //       // if (response.data.requires_reset) {
-    //       //   router.push({
-    //       //     path: '/user-management/reset-user-password',
-    //       //   });
-    //       // }
-    //       // else if (response.data.is_admin && !response.data.requires_reset) {
-    //       //   router.push({
-    //       //     path: '/',
-    //       //   });
-    //       // }
-    //       // window.location.reload()
-    //   } 
-    //   // // ==don't add before UX chapter
-    //   // else {
-    //   //     showNotice({
-    //   //       props: {
-    //   //         type: 'error',
-    //   //         duration: 5000,
-    //   //         message: `${response} has occurred, please try again later.`
-    //   //       },
-    //   //     });
-    //   // }
-    // };
-
-
+    
     const login = async () => {
+      const { username, password: _password } = input.value;
+      // isLoading.value = true;
+
       const body: ILoginCredentials = {
         username: "admin",
         password: "Pa$$w0rd",
-        apiRoot: baseUrl
+        apiRoot:baseUrl
       }
+
       const response = await authenticate(body);
-      if (response !== undefined && response.status === 401) {
+
+      if(response !== undefined && response.status === 401) {
         console.warn('error logging !!!!')
+        // // isLoading.value = false;
+        // errLog('Login', response.status );
+        //   showNotice({
+        //     props: {
+        //       type: 'error',
+        //       duration: 5000,
+        //       message: `Seems like an error has occurred!: ${
+        //         response.data.detail || 'Unknown error'
+        //       }.`,
+        //     },
+        //   });
       } else if (response !== undefined && response.status === 200) {
-        console.info(' logging successfull !!!!', response)
-      }
+
+        console.info(' logging successfull !!!!', response.data)
+
+        saveToStore('loginData', {
+            username:response.data.username,
+            // apiRoot:baseUrl,
+            isAdmin: response.data.is_admin,
+            access_token: response.data.access,
+            requiresReset: response.data.requires_reset,
+            isAllowed: !response.data.requires_reset,
+          });
+
+          //!!todo!!
+          // store.dispatch('user/loginUser', true);
+          // isLoading.value = false;
+
+          // if (response.data.requires_reset) {
+          //   router.push({
+          //     path: '/user-management/reset-user-password',
+          //   });
+          // }
+          // else if (response.data.is_admin && !response.data.requires_reset) {
+          //   router.push({
+          //     path: '/',
+          //   });
+          // }
+          // window.location.reload()
+      } 
+      // // ==don't add before UX chapter
+      // else {
+      //     showNotice({
+      //       props: {
+      //         type: 'error',
+      //         duration: 5000,
+      //         message: `${response} has occurred, please try again later.`
+      //       },
+      //     });
+      // }
     };
+
+
+    // const login = async () => {
+    //   const body: ILoginCredentials = {
+    //     username: "admin",
+    //     password: "Pa$$w0rd",
+    //     apiRoot: baseUrl
+    //   }
+    //   const response = await authenticate(body);
+    //   if (response !== undefined && response.status === 401) {
+    //     console.warn('error logging !!!!')
+    //   } else if (response !== undefined && response.status === 200) {
+    //     console.info(' logging successfull !!!!', response)
+    //   }
+    // };
     login()
   
       return {
